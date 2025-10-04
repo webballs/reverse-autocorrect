@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reverse Autocorrect</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 80%;
+      max-width: 600px;
+      height: 120px;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 2px solid #d1d5db;
+      outline: none;
+      resize: none;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .output {
+      margin-top: 1.5rem;
+      width: 80%;
+      max-width: 600px;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      min-height: 80px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Reverse Autocorrect</h1>
+  <textarea id="inputText" placeholder="Type something correctly..."></textarea>
+  <button onclick="reverseAutocorrect()">Reverse it!</button>
+  <div class="output" id="outputText"></div>
+
+  <script>
+    function reverseAutocorrect() {
+      const input = document.getElementById('inputText').value;
+      const words = input.split(' ');
+      const messedUpWords = words.map(w => messUpWord(w));
+      document.getElementById('outputText').innerText = messedUpWords.join(' ');
+    }
+
+    function messUpWord(word) {
+      if (word.length < 3) return word;
+
+      // Randomly decide what kind of mistake to make
+      const rand = Math.random();
+      if (rand < 0.25) return swapLetters(word);
+      else if (rand < 0.5) return deleteRandomLetter(word);
+      else if (rand < 0.75) return duplicateRandomLetter(word);
+      else return replaceWithSimilarLetter(word);
+    }
+
+    function swapLetters(word) {
+      const i = Math.floor(Math.random() * (word.length - 1));
+      return word.slice(0, i) + word[i+1] + word[i] + word.slice(i+2);
+    }
+
+    function deleteRandomLetter(word) {
+      const i = Math.floor(Math.random() * word.length);
+      return word.slice(0, i) + word.slice(i + 1);
+    }
+
+    function duplicateRandomLetter(word) {
+      const i = Math.floor(Math.random() * word.length);
+      return word.slice(0, i) + word[i] + word[i] + word.slice(i + 1);
+    }
+
+    function replaceWithSimilarLetter(word) {
+      const similar = { a: ['e','o'], e: ['a','i'], i: ['u','y'], o: ['a','u'], s: ['z','x'], t: ['r','y'], c: ['k','s'] };
+      const letters = word.split('');
+      const idx = Math.floor(Math.random() * letters.length);
+      const ch = letters[idx].toLowerCase();
+      if (similar[ch]) {
+        letters[idx] = similar[ch][Math.floor(Math.random() * similar[ch].length)];
+      }
+      return letters.join('');
+    }
+  </script>
+</body>
+</html>
