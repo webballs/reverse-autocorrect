@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>interactive microwave3000</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: 'Inter', sans-serif;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        /* Das Canvas hat jetzt **keinen eigenen Hintergrund**, Border oder Schatten */
+        #microwaveCanvas {
+            width: 80vw;
+            height: 60vh;
+            max-width: 900px;
+            max-height: 600px;
+            background-color: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        #itemSelection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .itemButton {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .itemButton img {
+            max-width: 60px;
+            max-height: 60px;
+            margin-bottom: 5px;
+        }
+
+        .itemButton:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.25);
+        }
+
+        .itemButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>interactive microwave3000</h1>
+    <canvas id="microwaveCanvas"></canvas>
+
+    <div id="itemSelection">
+        <button class="itemButton" data-item="ice">
+            <img src="images_microwave/ice_image.png" alt="Ice">
+            Ice
+        </button>
+        <button class="itemButton" data-item="pizza">
+            <img src="images_microwave/pizza_image.png" alt="Pizza">
+            Pizza
+        </button>
+        <button class="itemButton" data-item="dino_nuggie">
+            <img src="images_microwave/dino_nuggie_image.png" alt="Dino Nuggie">
+            Dino Nuggie
+        </button>
+        <button class="itemButton" data-item="radioactive_banana">
+            <img src="images_microwave/radioactive_banana_image.png" alt="Radioaktive Banane">
+            Radioaktive Banane
+        </button>
+        <button class="itemButton" data-item="rubber_duck">
+            <img src="images_microwave/rubber_duck_image.png" alt="Gummiente">
+            Gummiente
+        </button>
+    </div>
+
+    <script type="module" src="microwave.js"></script>
+</body>
+</html>

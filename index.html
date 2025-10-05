@@ -7,11 +7,10 @@
 
     <!-- Fonts & Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="cursor.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cursor/cursor.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /* === Grundlayout === */
         body {
             font-family: 'Poppins', sans-serif;
             color: #ffffff;
@@ -24,9 +23,9 @@
             cursor: none;
             padding: 20px;
             text-align: center;
+            gap: 1rem; /* Abstand zwischen Buttons */
         }
 
-        /* 🌈 Dreifarbiger Gradient ohne Schatten oder Glow */
         h1 {
             font-size: 3.5rem;
             font-weight: 700;
@@ -41,7 +40,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Button */
         button {
             font-family: 'Poppins', sans-serif;
             padding: 1rem 2.5rem;
@@ -54,6 +52,10 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
             cursor: pointer;
+
+            width: 250px;      /* gleiche Breite für alle Buttons */
+            text-align: center;
+            display: inline-block;
         }
 
         button:hover {
@@ -66,7 +68,6 @@
             transform: scale(0.95);
         }
 
-        /* Weißer Cursor */
         .cursor-circle-outer,
         .cursor-circle-inner {
             position: fixed;
@@ -95,17 +96,25 @@
 </head>
 <body>
     <h1>web's playground</h1>
+
+    <!-- Buttons -->
     <button id="reverseBtn">Reverse Autocorrect</button>
+    <button id="microwaveBtn">Interactive Microwave</button>
 
     <!-- Cursor circles -->
     <div class="cursor-circle-outer" id="cursorOuter"></div>
     <div class="cursor-circle-inner" id="cursorInner"></div>
 
-    <script src="cursor.js"></script>
+    <!-- JS -->
+    <script src="cursor/cursor.js"></script>
     <script>
-        // Button-Click Weiterleitung
+        // Button-Click Weiterleitungen
         document.getElementById('reverseBtn').addEventListener('click', () => {
-            window.location.href = 'reverse.html';
+            window.location.href = 'reverse/reverse.html';
+        });
+
+        document.getElementById('microwaveBtn').addEventListener('click', () => {
+            window.location.href = 'microwave/microwave.html';
         });
     </script>
 </body>
