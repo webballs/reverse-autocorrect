@@ -45,6 +45,7 @@
   }
 
   .btn-3d-wrap { perspective: 1600px; margin-top: 1rem; }
+
   #reverseBtn {
     padding: 1rem 2rem;
     font-size: 1.2rem;
@@ -59,10 +60,29 @@
     will-change: transform, box-shadow;
     transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.3s ease;
   }
+
   #reverseBtn:hover {
     background: linear-gradient(135deg, #00a6ff, #0076ff);
   }
+
   #reverseBtn:active { transform: scale(0.95); }
+
+  /* --- Button Down Animation --- */
+  @keyframes buttonDown {
+    0% {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    40% {
+      transform: translateY(0px) scale(0.97);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    100% {
+      transform: translateY(0) scale(1);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+  }
+  .reverse-press { animation: buttonDown 0.25s ease; }
 
   .output {
     position: relative;
@@ -240,6 +260,9 @@ const output=document.getElementById('outputText');
 const copyBtn=document.getElementById('copyBtn');
 
 reverseBtn.addEventListener('click',()=>{
+  reverseBtn.classList.add('reverse-press'); // NEW
+  setTimeout(()=>reverseBtn.classList.remove('reverse-press'),250); // NEW
+
   const input=document.getElementById('inputText').value.trim();
   const words=input.split(' ');
   const messed=words.map(messUpWord);
@@ -260,7 +283,7 @@ reverseBtn.addEventListener('click',()=>{
 
 copyBtn.addEventListener('click',()=>{navigator.clipboard.writeText(output.innerText);copyBtn.textContent='Copied!';setTimeout(()=>copyBtn.textContent='Copy',1000);});
 
-/* 3D Tilt (fixed hitbox) */
+/* 3D Tilt */
 (function(){
   const btn=document.getElementById('reverseBtn');let raf=null,lastEvt=null;
   function applyTilt(){raf=null;if(!lastEvt)return;const r=btn.getBoundingClientRect();

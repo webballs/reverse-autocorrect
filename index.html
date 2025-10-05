@@ -1,74 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>web's playground</title>
-  <link rel="stylesheet" href="cursor.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #ffffff;
-      color: #111827;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      cursor: none;
-      padding: 20px;
-      text-align: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web's playground</title>
 
-    h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-    }
+    <!-- Fonts & Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cursor.css">
+    <link rel="stylesheet" href="style.css">
 
-    button {
-      font-family: 'Poppins', sans-serif;
-      padding: 1rem 2.5rem;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #0096ff, #006eff);
-      color: white;
-      font-weight: 600;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
-      cursor: pointer;
-    }
+    <style>
+        /* === Grundlayout === */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            cursor: none;
+            padding: 20px;
+            text-align: center;
+        }
 
-    button:hover {
-      transform: scale(1.05);
-      background: linear-gradient(135deg, #00a6ff, #0076ff);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-    }
+        /* 🌈 Dreifarbiger Gradient ohne Schatten oder Glow */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg,
+                rgb(255, 0, 0),
+                rgb(0, 133, 255),
+                rgb(18, 127, 2)
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+        }
 
-    button:active {
-      transform: scale(0.95);
-    }
-  </style>
+        /* Button */
+        button {
+            font-family: 'Poppins', sans-serif;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #0096ff, #006eff);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #00a8ff, #007aff);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Weißer Cursor */
+        .cursor-circle-outer,
+        .cursor-circle-inner {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .cursor-circle-outer {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out;
+            filter: blur(0.5px);
+        }
+
+        .cursor-circle-inner {
+            width: 8px;
+            height: 8px;
+            background: #000000;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            transition: transform 0.05s ease-out;
+        }
+    </style>
 </head>
 <body>
-  <h1>web's playground</h1>
+    <h1>web's playground</h1>
+    <button id="reverseBtn">Reverse Autocorrect</button>
 
-  <button id="reverseBtn">Reverse Autocorrect</button>
+    <!-- Cursor circles -->
+    <div class="cursor-circle-outer" id="cursorOuter"></div>
+    <div class="cursor-circle-inner" id="cursorInner"></div>
 
-  <!-- Cursor circles -->
-  <div class="cursor-circle-outer" id="cursorOuter"></div>
-  <div class="cursor-circle-inner" id="cursorInner"></div>
-
-  <script src="cursor.js"></script>
-  <script>
-    document.getElementById('reverseBtn').addEventListener('click', () => {
-      window.location.href = 'reverse.html';
-    });
-  </script>
-  <script src="background.js"></script>
-
+    <script src="cursor.js"></script>
+    <script>
+        // Button-Click Weiterleitung
+        document.getElementById('reverseBtn').addEventListener('click', () => {
+            window.location.href = 'reverse.html';
+        });
+    </script>
 </body>
 </html>
