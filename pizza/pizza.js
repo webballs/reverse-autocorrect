@@ -135,16 +135,13 @@ function checkBar(){
     resultEl.textContent = '🔥 Perfect pizza!';
     indicatorEl.style.background = '#4caf50';
     personalPizzas += reward;
-    // send delta to server
-    sendDeltaToServer(reward);
-    globalPizzas += reward; // will be updated again when server replies, but keep local optimistic
+    sendDeltaToServer(reward);   // ONLY update server
     updateCounters();
     showFloatingText('+'+reward+' 🍕','#8ef58e');
     updateExtremeUnlock();
   } else {
     resultEl.textContent = indicatorCenter < targetLeft ? '🥶 Undercooked!' : '💀 Burnt!';
     indicatorEl.style.background = '#f44336';
-    // no personal change on simple fail
   }
 
   setTimeout(()=>{
@@ -155,9 +152,7 @@ function checkBar(){
   },1000);
 }
 
-pizzaImg.addEventListener('click', ()=>{
-  if(!paused) checkBar();
-});
+pizzaImg.addEventListener('click', ()=>{ if(!paused) checkBar(); });
 
 // modes
 easyBtn.addEventListener('click', ()=>{
@@ -220,86 +215,27 @@ betInput.addEventListener('input', clampBetInput);
 const SUITS = ['♠️','♥️','♦️','♣️'];
 const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 
-function buildDeck(){
-  const d = [];
-  for(const s of SUITS){
-    for(const r of RANKS){
-      d.push({suit:s, rank:r});
-    }
-  }
-  return d;
-}
-function shuffle(d){
-  for(let i=d.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [d[i], d[j]] = [d[j], d[i]];
-  }
-}
-function handValue(hand){
-  let total = 0;
-  let aces = 0;
-  for(const c of hand){
-    if(c.rank === 'A'){ aces++; total += 11; }
-    else if(['J','Q','K'].includes(c.rank)) total += 10;
-    else total += parseInt(c.rank,10);
-  }
-  while(total > 21 && aces > 0){
-    total -= 10; aces--;
-  }
-  return total;
-}
-
-function renderCards(el, hand, hideFirst=false){
-  el.innerHTML = '';
-  for(let i=0;i<hand.length;i++){
-    const c = hand[i];
-    const cardDiv = document.createElement('div');
-    cardDiv.className = 'card';
-    if(hideFirst && i===0){
-      cardDiv.innerHTML = '<div style="font-size:18px;opacity:0.25">🂠</div><div class="val" style="opacity:0.35">?</div>';
-    } else {
-      cardDiv.innerHTML = `<div class="suit">${c.suit}</div><div class="val">${c.rank}</div>`;
-    }
-    el.appendChild(cardDiv);
-  }
-}
-
-function resetRoundUI(){
-  playerCardsEl.innerHTML = '';
-  dealerCardsEl.innerHTML = '';
-  playerValueEl.textContent = '';
-  dealerValueEl.textContent = '';
-  bjStatus.textContent = '';
-  hitBtn.disabled = true;
-  standBtn.disabled = true;
-  quitBtn.disabled = true;
-}
+function buildDeck(){ const d = []; for(const s of SUITS){ for(const r of RANKS){ d.push({suit:s, rank:r}); } } return d; }
+function shuffle(d){ for(let i=d.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [d[i], d[j]] = [d[j], d[i]]; } }
+function handValue(hand){ let total=0, aces=0; for(const c of hand){ if(c.rank==='A'){ aces++; total+=11; } else if(['J','Q','K'].includes(c.rank)) total+=10; else total+=parseInt(c.rank,10); } while(total>21 && aces>0){ total-=10; aces--; } return total; }
+function renderCards(el, hand, hideFirst=false){ el.innerHTML=''; for(let i=0;i<hand.length;i++){ const c=hand[i]; const cardDiv=document.createElement('div'); cardDiv.className='card'; if(hideFirst && i===0){ cardDiv.innerHTML='<div style="font-size:18px;opacity:0.25">🂠</div><div class="val" style="opacity:0.35">?</div>'; } else { cardDiv.innerHTML=`<div class="suit">${c.suit}</div><div class="val">${c.rank}</div>`; } el.appendChild(cardDiv); } }
+function resetRoundUI(){ playerCardsEl.innerHTML=''; dealerCardsEl.innerHTML=''; playerValueEl.textContent=''; dealerValueEl.textContent=''; bjStatus.textContent=''; hitBtn.disabled=true; standBtn.disabled=true; quitBtn.disabled=true; }
 
 // --- Round logic
-function canAfford(bet){
-  return personalPizzas >= bet && bet >= 1;
-}
+function canAfford(bet){ return personalPizzas >= bet && bet >= 1; }
 
 function startRound(){
   currentBet = Math.max(1, Math.floor(Number(betInput.value) || 1));
-  if(!canAfford(currentBet)){
-    bjStatus.textContent = 'Not enough personal pizzas to place that bet.';
-    return;
-  }
+  if(!canAfford(currentBet)){ bjStatus.textContent='Not enough personal pizzas to place that bet.'; return; }
 
-  // Deduct bet from personal immediately and notify server (global)
   personalPizzas -= currentBet;
   updateCounters();
-  sendDeltaToServer(-currentBet); // global decreases by bet
+  sendDeltaToServer(-currentBet); // global only via server
 
-  // prepare deck & hands
   deck = buildDeck(); shuffle(deck);
-  playerHand = []; dealerHand = [];
-  inRound = true;
-  bjStatus.textContent = '';
-  resetRoundUI();
+  playerHand=[]; dealerHand=[]; inRound=true;
+  bjStatus.textContent=''; resetRoundUI();
 
-  // deal
   playerHand.push(deck.pop());
   dealerHand.push(deck.pop());
   playerHand.push(deck.pop());
@@ -309,41 +245,35 @@ function startRound(){
   renderCards(dealerCardsEl, dealerHand, true);
 
   const pVal = handValue(playerHand);
-  playerValueEl.textContent = `Value: ${pVal}`;
-
-  const pBlack = (pVal === 21);
+  const pBlack = (pVal===21);
   const dVal = handValue(dealerHand);
-  const dBlack = (dVal === 21);
+  const dBlack = (dVal===21);
 
-  hitBtn.disabled = false; standBtn.disabled = false; quitBtn.disabled = false;
+  hitBtn.disabled=false; standBtn.disabled=false; quitBtn.disabled=false;
 
   if(pBlack || dBlack){
-    renderCards(dealerCardsEl, dealerHand);
-    dealerValueEl.textContent = `Value: ${dVal}`;
+    renderCards(dealerCardsEl,dealerHand);
+    dealerValueEl.textContent=`Value: ${dVal}`;
     if(pBlack && !dBlack){
-      const payout = Math.floor(currentBet * 2.5);
-      personalPizzas += payout;
+      const payout=Math.floor(currentBet*2.5);
+      personalPizzas+=payout;
       sendDeltaToServer(payout);
-      globalPizzas += payout;
-      bjStatus.textContent = 'Blackjack! You win!';
+      bjStatus.textContent='Blackjack! You win!';
       showFloatingText(`+${payout} 🍕`, '#ffd166');
     } else if(!pBlack && dBlack){
-      bjStatus.textContent = 'Dealer has Blackjack. You lose.';
-      // nothing to refund
+      bjStatus.textContent='Dealer has Blackjack. You lose.';
     } else {
-      bjStatus.textContent = 'Push (both Blackjack). Bet returned.';
-      personalPizzas += currentBet;
+      bjStatus.textContent='Push (both Blackjack). Bet returned.';
+      personalPizzas+=currentBet;
       sendDeltaToServer(currentBet);
-      globalPizzas += currentBet;
     }
-    updateCounters();
-    inRound = false;
-    hitBtn.disabled = true; standBtn.disabled = true; quitBtn.disabled = true;
+    updateCounters(); inRound=false;
+    hitBtn.disabled=true; standBtn.disabled=true; quitBtn.disabled=true;
     updateExtremeUnlock();
     return;
   }
 
-  dealerValueEl.textContent = 'Value: ?';
+  dealerValueEl.textContent='Value: ?';
 }
 
 // player actions
@@ -351,110 +281,86 @@ hitBtn.addEventListener('click', ()=>{
   if(!inRound) return;
   playerHand.push(deck.pop());
   renderCards(playerCardsEl, playerHand);
-  const pv = handValue(playerHand);
-  playerValueEl.textContent = `Value: ${pv}`;
-  if(pv > 21){
-    inRound = false;
-    bjStatus.textContent = 'Bust! You lose.';
-    hitBtn.disabled = true; standBtn.disabled = true; quitBtn.disabled = true;
+  const pv=handValue(playerHand);
+  playerValueEl.textContent=`Value: ${pv}`;
+  if(pv>21){
+    inRound=false;
+    bjStatus.textContent='Bust! You lose.';
+    hitBtn.disabled=true; standBtn.disabled=true; quitBtn.disabled=true;
     updateExtremeUnlock();
   }
 });
 
 standBtn.addEventListener('click', ()=>{
   if(!inRound) return;
-  renderCards(dealerCardsEl, dealerHand);
-  let dv = handValue(dealerHand);
-  dealerValueEl.textContent = `Value: ${dv}`;
-  while(dv < 17){
+  renderCards(dealerCardsEl,dealerHand);
+  let dv=handValue(dealerHand);
+  dealerValueEl.textContent=`Value: ${dv}`;
+  while(dv<17){
     dealerHand.push(deck.pop());
-    renderCards(dealerCardsEl, dealerHand);
-    dv = handValue(dealerHand);
-    dealerValueEl.textContent = `Value: ${dv}`;
+    renderCards(dealerCardsEl,dealerHand);
+    dv=handValue(dealerHand);
+    dealerValueEl.textContent=`Value: ${dv}`;
   }
+  const pv=handValue(playerHand);
 
-  const pv = handValue(playerHand);
-
-  if(dv > 21){
-    const payout = currentBet * 2;
-    personalPizzas += payout;
+  if(dv>21){
+    const payout=currentBet*2;
+    personalPizzas+=payout;
     sendDeltaToServer(payout);
-    globalPizzas += payout;
-    bjStatus.textContent = 'Dealer busts! You win!';
+    bjStatus.textContent='Dealer busts! You win!';
     showFloatingText(`+${payout} 🍕`, '#8ef58e');
-  } else if(dv === pv){
-    personalPizzas += currentBet;
+  } else if(dv===pv){
+    personalPizzas+=currentBet;
     sendDeltaToServer(currentBet);
-    globalPizzas += currentBet;
-    bjStatus.textContent = 'Push. Bet returned.';
-  } else if(pv > dv){
-    const payout = currentBet * 2;
-    personalPizzas += payout;
+    bjStatus.textContent='Push. Bet returned.';
+  } else if(pv>dv){
+    const payout=currentBet*2;
+    personalPizzas+=payout;
     sendDeltaToServer(payout);
-    globalPizzas += payout;
-    bjStatus.textContent = 'You win!';
+    bjStatus.textContent='You win!';
     showFloatingText(`+${payout} 🍕`, '#8ef58e');
   } else {
-    bjStatus.textContent = 'You lose.';
+    bjStatus.textContent='You lose.';
   }
 
   updateCounters();
-  inRound = false;
-  hitBtn.disabled = true; standBtn.disabled = true; quitBtn.disabled = true;
+  inRound=false;
+  hitBtn.disabled=true; standBtn.disabled=true; quitBtn.disabled=true;
   updateExtremeUnlock();
 });
 
 quitBtn.addEventListener('click', ()=>{
   if(!inRound) return;
-  inRound = false;
-  personalPizzas += currentBet;
+  inRound=false;
+  personalPizzas+=currentBet;
   sendDeltaToServer(currentBet);
-  globalPizzas += currentBet;
-  bjStatus.textContent = 'Round aborted. Bet returned.';
+  bjStatus.textContent='Round aborted. Bet returned.';
   updateCounters();
-  renderCards(dealerCardsEl, dealerHand);
-  renderCards(playerCardsEl, playerHand);
-  hitBtn.disabled = true; standBtn.disabled = true; quitBtn.disabled = true;
+  renderCards(dealerCardsEl,dealerHand);
+  renderCards(playerCardsEl,playerHand);
+  hitBtn.disabled=true; standBtn.disabled=true; quitBtn.disabled=true;
   updateExtremeUnlock();
 });
 
 // play button
 playBtn.addEventListener('click', ()=>{
-  if(inRound){ bjStatus.textContent = 'Round already running.'; return; }
-  const bet = Math.max(1, Math.floor(Number(betInput.value) || 1));
-  if(personalPizzas < 1){ bjStatus.textContent = 'You need at least 1 pizza to play.'; return; }
-  if(!canAfford(bet)){ bjStatus.textContent = 'Not enough personal pizzas to place that bet.'; return; }
+  if(inRound){ bjStatus.textContent='Round already running.'; return; }
+  const bet=Math.max(1, Math.floor(Number(betInput.value) || 1));
+  if(personalPizzas<1){ bjStatus.textContent='You need at least 1 pizza to play.'; return; }
+  if(!canAfford(bet)){ bjStatus.textContent='Not enough personal pizzas to place that bet.'; return; }
   startRound();
 });
 
-// utility
-function canAfford(bet){ return personalPizzas >= bet; }
-
-// auto-update UI / disable play when not enough
-setInterval(()=>{
-  playBtn.disabled = !(personalPizzas >= 1 && !inRound);
-},200);
-
+setInterval(()=>{ playBtn.disabled=!(personalPizzas>=1 && !inRound); },200);
 betInput.addEventListener('blur', clampBetInput);
 
-// --- Unload: send remaining personal pizzas to server
 function trySendPersonalOnExit(){
-  if(personalPizzas <= 0) return;
-  const payload = JSON.stringify({ delta: personalPizzas });
-  // try sendBeacon to HTTP /sync endpoint on server
-  try {
-    if(navigator.sendBeacon){
-      const blob = new Blob([payload], {type: 'application/json'});
-      navigator.sendBeacon('http://localhost:8080/sync', blob);
-    }
-  } catch(e){}
-  // Also try via websocket if open
-  try {
-    if(socket && socket.readyState === 1){
-      socket.send(JSON.stringify({ type: 'delta', amount: personalPizzas }));
-    }
-  } catch(e){}
-  personalPizzas = 0; updateCounters();
+  if(personalPizzas<=0) return;
+  const payload=JSON.stringify({ delta: personalPizzas });
+  try { if(navigator.sendBeacon){ const blob=new Blob([payload], {type:'application/json'}); navigator.sendBeacon('http://localhost:8080/sync', blob); } } catch(e){}
+  try { if(socket && socket.readyState===1){ socket.send(JSON.stringify({ type:'delta', amount: personalPizzas })); } } catch(e){}
+  personalPizzas=0; updateCounters();
 }
 window.addEventListener('beforeunload', trySendPersonalOnExit);
 
