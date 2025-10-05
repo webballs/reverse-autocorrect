@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            color: #ffffff;
+           
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,7 +23,7 @@
             cursor: none;
             padding: 20px;
             text-align: center;
-            gap: 1rem; /* Abstand zwischen Buttons */
+            gap: 1rem;
         }
 
         h1 {
@@ -40,7 +40,17 @@
             letter-spacing: -0.5px;
         }
 
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 350px;
+        }
+
         button {
+            width: 100%;
             font-family: 'Poppins', sans-serif;
             padding: 1rem 2.5rem;
             font-size: 1.2rem;
@@ -52,10 +62,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
             cursor: pointer;
-
-            width: 250px;      /* gleiche Breite für alle Buttons */
-            text-align: center;
-            display: inline-block;
+            white-space: nowrap; /* Kein Zeilenumbruch im Text */
         }
 
         button:hover {
@@ -97,9 +104,11 @@
 <body>
     <h1>web's playground</h1>
 
-    <!-- Buttons -->
-    <button id="reverseBtn">Reverse Autocorrect</button>
-    <button id="microwaveBtn">Interactive Microwave</button>
+    <div class="button-container">
+        <button id="reverseBtn">Reverse Autocorrect</button>
+        <button id="microwaveBtn">Interactive Microwave</button>
+        <button id="pizzaBtn">Multiplayer Pizza Clicker</button>
+    </div>
 
     <!-- Cursor circles -->
     <div class="cursor-circle-outer" id="cursorOuter"></div>
@@ -108,13 +117,16 @@
     <!-- JS -->
     <script src="cursor/cursor.js"></script>
     <script>
-        // Button-Click Weiterleitungen
         document.getElementById('reverseBtn').addEventListener('click', () => {
             window.location.href = 'reverse/reverse.html';
         });
 
         document.getElementById('microwaveBtn').addEventListener('click', () => {
             window.location.href = 'microwave/microwave.html';
+        });
+
+        document.getElementById('pizzaBtn').addEventListener('click', () => {
+            window.location.href = 'pizza/pizza.html';
         });
     </script>
 </body>

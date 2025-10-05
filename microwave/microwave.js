@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setClearColor(0xFFFFFF, 1);
+    renderer.setClearColor(0xFFDF88, 1);
 
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
