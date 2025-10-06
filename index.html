@@ -89,23 +89,10 @@ button img {
     display: block;
 }
 
-button span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 2rem;  /* größerer Text */
-    font-weight: 800; /* fetter Text */
-    text-shadow: 0 3px 8px rgba(0,0,0,0.9); /* besser lesbar */
-    white-space: nowrap; /* Text in einer Zeile */
-    pointer-events: none;
-}
-
 /* ===== Responsiv für kleine Bildschirme ===== */
 @media (max-width: 480px) {
-    button span {
-        font-size: 1.5rem; /* Text kleiner auf Handy */
+    button {
+        max-width: 90%; /* Buttons passen sich kleinerem Bildschirm an */
     }
 }
 </style>
@@ -116,15 +103,12 @@ button span {
 <div class="button-container">
     <button id="reverseBtn">
         <img src="images/autocorrect.png" alt="Autocorrect">
-        <span>Reverse Autocorrect</span>
     </button>
     <button id="microwaveBtn">
         <img src="images/microwave.png" alt="Microwave">
-        <span>Interactive Microwave</span>
     </button>
     <button id="pizzaBtn">
         <img src="images/clicker.png" alt="Pizza Clicker">
-        <span>Pizza Clicker</span>
     </button>
 </div>
 
