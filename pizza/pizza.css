@@ -3,7 +3,6 @@
   --bg2: #ffb74d;
   --bg3: #ff9800;
   --box-bg: rgba(0,0,0,0.25);
-  --box-accent: rgba(255,255,255,0.06);
 }
 
 *{box-sizing:border-box;}
@@ -17,8 +16,6 @@ body{
   font-family:'Poppins',sans-serif;
   background: radial-gradient(circle,var(--bg1),var(--bg2),var(--bg3));
   color:#fff;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   user-select:none;
 }
 
@@ -38,49 +35,36 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.35);
   width:100%;
   max-width:500px;
-}
-
-.game-container{
   text-align:center;
 }
 
-h1{ 
-  margin:0 0 8px 0; 
-  font-size:28px; 
-  text-align:center; /* zentriert die Überschrift */
-}
+h1{ margin:0 0 8px 0; font-size:28px; text-align:center; }
 
-/* Counter & Plus-Text */
 .counter-wrapper{
-  position: relative;      /* absolute Kinder beziehen sich hierauf */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;           /* feste Breite */
-  margin: 8px 0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin:8px 0;
+  min-height:28px; /* Platz für plusText */
 }
-
 #personalCount{
-  font-size: 20px;
+  font-size:20px;
   font-weight:700;
   background: rgba(255,255,255,0.1);
-  padding: 8px 16px;
+  padding:8px 16px;
   border-radius:12px;
-  display: inline-block;
+  text-align:center;
 }
 
 #plusText{
-  position: absolute;
-  top: 100%;             /* unter dem Counter */
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 18px;
+  font-size:18px;
   font-weight:700;
-  color: #ffd166;
-  pointer-events:none;
+  color:#ffd166;
+  min-width:60px;
+  text-align:left;
 }
 
-/* Pizza */
 #pizza{
   width:200px;
   height:200px;
@@ -94,7 +78,6 @@ h1{
 }
 #pizza:active{ transform:scale(.95); }
 
-/* bar */
 .bar{
   width:100%;
   max-width:400px;
@@ -124,16 +107,8 @@ h1{
   transition: background .2s ease, left 0.03s linear;
 }
 
-/* result text space */
-#result{
-  height:22px;
-  margin-top:10px;
-  font-size:16px;
-  text-align:center;
-  min-height:24px; /* feste Höhe damit Buttons nicht verschieben */
-}
+#result{ height:22px; margin-top:10px; font-size:16px; min-height:24px; }
 
-/* modes */
 .modes{
   display:flex;
   gap:14px;
@@ -170,7 +145,6 @@ h1{
   box-shadow:0 6px 18px rgba(216,27,96,0.18);
 }
 
-/* Open Blackjack button */
 .open-blackjack{
   margin-top:12px;
   display:block;
@@ -184,7 +158,6 @@ h1{
   border:none;
 }
 
-/* blackjack container */
 .blackjack-container{
   max-height:0;
   opacity:0;
@@ -192,7 +165,6 @@ h1{
   transition:max-height .45s cubic-bezier(.2,.9,.2,1), opacity .3s ease;
   margin-top:10px;
   background: rgba(0,0,0,0.32);
-  text-align:center;
 }
 
 .blackjack-container.open{
@@ -200,15 +172,8 @@ h1{
   opacity:1;
 }
 
-/* blackjack layout */
 .bj-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
-.cards{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-}
+.cards{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
 .card{
   min-width:56px;
   height:72px;
@@ -227,20 +192,11 @@ h1{
 .card .val{ font-size:14px; opacity:0.85; }
 
 .actions{ display:flex; gap:8px; margin-top:10px; justify-content:center; }
-.action-btn{
-  padding:8px 14px;
-  border-radius:10px;
-  border:none;
-  background:#333;
-  color:#fff;
-  cursor:pointer;
-  font-size:16px;
-}
+.action-btn{ padding:8px 14px; border-radius:10px; border:none; background:#333; color:#fff; cursor:pointer; font-size:16px; }
 .action-btn:disabled{ opacity:0.45; cursor:not-allowed; }
 
 .status{ text-align:center; margin-top:8px; font-size:15px; min-height:20px; }
 
-/* floating text */
 .floating-text{
   position:absolute;
   left:50%;
@@ -257,7 +213,6 @@ h1{
   to{ opacity:0; transform:translate(-50%,-60px) }
 }
 
-/* betting controls */
 .bet-controls{
   display:flex;
   gap:8px;
@@ -272,21 +227,14 @@ h1{
   text-align:center;
   font-size:16px;
 }
-.small-btn{
-  padding:8px 10px;
-  border-radius:8px;
-  border:none;
-  background:#444;
-  color:#fff;
-  cursor:pointer;
-  font-size:16px;
-}
+.small-btn{ padding:8px 10px; border-radius:8px; border:none; background:#444; color:#fff; cursor:pointer; font-size:16px; }
 
-/* Responsive tweaks */
 @media (max-width:520px){
-  .bar{ width:90%; }
+  .bar{ width:90%; max-width:320px; }
   .game-container, .blackjack-container{ padding:16px; }
   .card{ min-width:48px; height:64px; }
   .wrapper{ gap:12px; }
   #pizza{ width:160px; height:160px; }
+  #personalCount{ font-size:18px; padding:6px 12px; }
+  #plusText{ font-size:16px; min-width:40px; }
 }

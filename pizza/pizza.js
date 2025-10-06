@@ -28,8 +28,8 @@ const standBtn = document.getElementById('standBtn');
 const bjStatus = document.getElementById('bjStatus');
 
 /* ---------- Game state ---------- */
-const BAR_WIDTH = 400;
 const IND_WIDTH = 20;
+let BAR_WIDTH = document.querySelector('.bar').offsetWidth;
 let pos = (BAR_WIDTH - IND_WIDTH) / 2; // center correctly
 let dir = 1;
 let running = true;
@@ -39,7 +39,7 @@ let reward = 1;
 let targetWidth = 100;
 
 let personalPizzas = 5;
-let maxPizzasAchieved = personalPizzas; 
+let maxPizzasAchieved = personalPizzas; // Höchstwert für Extreme
 let extremeUnlocked = false;
 let blackjackUnlocked = false;
 
@@ -67,6 +67,12 @@ function centerTarget(){
 }
 centerTarget();
 
+/* ---------- responsive Bar width ---------- */
+window.addEventListener('resize', ()=>{
+  BAR_WIDTH = document.querySelector('.bar').offsetWidth;
+  centerTarget();
+});
+
 /* ---------- indicator ---------- */
 function setIndicatorPos(x){
   indicatorEl.style.left = x + 'px';
@@ -84,13 +90,15 @@ function move(){
 move();
 
 /* ---------- floating text ---------- */
-function showFloatingText(txt, color='#fff'){
+function showFloatingText(txt,color='#fff'){
   plusTextEl.textContent = txt;
   plusTextEl.style.color = color;
   plusTextEl.style.opacity = 1;
   setTimeout(()=>{
-    plusTextEl.style.transition = 'opacity 1s ease';
+    plusTextEl.style.transition = 'opacity 1s ease, transform 1s ease';
     plusTextEl.style.opacity = 0;
+    plusTextEl.style.transform = 'translateY(-40px)';
+    setTimeout(()=> plusTextEl.style.transform='translateY(0)',1000);
   },50);
 }
 
@@ -114,7 +122,7 @@ function checkBar(){
   }
 
   updateCounters();
-  showFloatingText(`+${gain} 🍕`,'#ffd166');
+  if(gain>0) showFloatingText(`+${gain} 🍕`,'#ffd166');
 
   setTimeout(()=>{
     indicatorEl.style.background = '#fff';
@@ -178,9 +186,6 @@ function updateBlackjackUnlock(){
     openBJBtn.textContent=`🎰 Blackjack 🔒 (${remaining} left)`;
   }
 }
-
-/* ---------- restlicher Blackjack + Bet logic bleibt identisch ---------- */
-
 
 /* ---------- OPEN/CLOSE blackjack ---------- */
 openBJBtn.addEventListener('click', ()=>{
@@ -295,7 +300,7 @@ function startRound(){
       personalPizzas+=payout;
       if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
       bjStatus.textContent='Blackjack! You win!';
-      showFloatingText(`+${payout}`);
+      showFloatingText(`+${payout} 🍕`);
     } else if(!pBlack && dBlack){
       bjStatus.textContent='Dealer has Blackjack. You lose.';
     } else {
@@ -341,7 +346,7 @@ standBtn.addEventListener('click', ()=>{
     personalPizzas+=payout;
     if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
     bjStatus.textContent='Dealer busts! You win!';
-    showFloatingText(`+${payout}`);
+    showFloatingText(`+${payout} 🍕`);
   } else if(dv===pv){ // Push
     personalPizzas+=currentBet;
     bjStatus.textContent='Push. Bet returned.';
@@ -350,7 +355,7 @@ standBtn.addEventListener('click', ()=>{
     personalPizzas+=payout;
     if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
     bjStatus.textContent='You win!';
-    showFloatingText(`+${payout}`);
+    showFloatingText(`+${payout} 🍕`);
   } else {
     bjStatus.textContent='You lose.';
   }
