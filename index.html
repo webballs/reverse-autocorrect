@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>web's playground</title>
 
-<!-- Fonts & Styles -->
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -38,6 +38,7 @@ body {
     text-align: center;
 
     font-family: 'Poppins', sans-serif;
+    cursor: none; /* Standard-Cursor ausblenden */
 }
 
 @keyframes m {
@@ -67,9 +68,9 @@ h1 {
 
 button {
     position: relative;
-    width: 90%;           /* passt sich an Bildschirmbreite an */
-    max-width: 400px;     /* maximale Breite */
-    aspect-ratio: 7 / 3;  /* feste Ratio Breite:Höhe */
+    width: 90%;           
+    max-width: 400px;     
+    aspect-ratio: 7 / 3;  
     border: none;
     padding: 0;
     border-radius: 20px;
@@ -85,14 +86,40 @@ button:hover {
 button img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Bild füllt Button komplett aus */
+    object-fit: cover;
     display: block;
+}
+
+/* ===== Custom Cursor ===== */
+.cursor-circle-outer,
+.cursor-circle-inner {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.cursor-circle-outer {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0,0,0,0.5);
+    transition: transform 0.1s ease-out;
+    filter: blur(0.5px);
+}
+
+.cursor-circle-inner {
+    width: 8px;
+    height: 8px;
+    background: #000;
+    box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    transition: transform 0.05s ease-out;
 }
 
 /* ===== Responsiv für kleine Bildschirme ===== */
 @media (max-width: 480px) {
     button {
-        max-width: 90%; /* Buttons passen sich kleinerem Bildschirm an */
+        max-width: 90%;
     }
 }
 </style>
@@ -112,6 +139,10 @@ button img {
     </button>
 </div>
 
+<!-- Custom Cursor -->
+<div class="cursor-circle-outer" id="cursorOuter"></div>
+<div class="cursor-circle-inner" id="cursorInner"></div>
+
 <script>
 function navigate(url) {
     window.location.href = url;
@@ -120,6 +151,28 @@ function navigate(url) {
 document.getElementById('reverseBtn').addEventListener('click', () => navigate('reverse/reverse.html'));
 document.getElementById('microwaveBtn').addEventListener('click', () => navigate('microwave/microwave.html'));
 document.getElementById('pizzaBtn').addEventListener('click', () => navigate('pizza/pizza.html'));
+
+/* ===== Cursor JS ===== */
+const cursorOuter = document.getElementById('cursorOuter');
+const cursorInner = document.getElementById('cursorInner');
+
+document.addEventListener('mousemove', e => {
+    cursorOuter.style.left = `${e.clientX}px`;
+    cursorOuter.style.top = `${e.clientY}px`;
+    cursorInner.style.left = `${e.clientX}px`;
+    cursorInner.style.top = `${e.clientY}px`;
+});
+
+/* ===== Click Animation: innerer verschwindet, äußerer auf Größe des kleinen Kreises ===== */
+document.addEventListener('mousedown', () => {
+    cursorOuter.style.transform = 'translate(-50%, -50%) scale(0.2)'; // äußere auf kleine Größe
+    cursorInner.style.transform = 'translate(-50%, -50%) scale(0)';    // innerer verschwindet
+});
+
+document.addEventListener('mouseup', () => {
+    cursorOuter.style.transform = 'translate(-50%, -50%) scale(1)';    // zurück Normalgröße
+    cursorInner.style.transform = 'translate(-50%, -50%) scale(1)';    // wieder sichtbar
+});
 </script>
 </body>
 </html>
