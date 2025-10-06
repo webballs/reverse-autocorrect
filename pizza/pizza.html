@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pizza Clicker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="pizza.css">
+  <link rel="stylesheet" href="pizza.css" />
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
 <body>
   <div class="game-container">
     <h1>🍕 Pizza Clicker</h1>
-    <p id="personalCount">Your Pizzas: 0</p>
     <p id="globalCount">Global Pizzas: 0</p>
-
-    <img id="pizza" src="pizza.png" alt="Pizza">
-
-    <div class="bar">
-      <div class="target"></div>
-      <div class="indicator"></div>
+    <p id="personalCount">Your Pizzas: 0</p>
+    <img id="pizza" src="pizza.png" alt="Pizza" />
+    <div class="bar-container">
+      <div id="target-zone"></div>
+      <div id="slider"></div>
     </div>
-
-    <p id="result"></p>
-
-    <div class="modes">
-      <button class="easy">Easy</button>
-      <button class="mid">Mid</button>
-      <button class="hard">Hard</button>
+    <div class="mode-buttons">
+      <button class="mode" data-mode="easy">Easy</button>
+      <button class="mode" data-mode="mid">Mid</button>
+      <button class="mode" data-mode="hard">Hard</button>
+      <button id="extremeBtn" class="mode locked" data-mode="extreme">Extreme 🔒</button>
     </div>
-    <button class="extreme">Extreme 🔒 (100 left)</button>
   </div>
 
   <script src="pizza.js"></script>

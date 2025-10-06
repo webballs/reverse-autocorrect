@@ -1,148 +1,78 @@
-const pizza = document.getElementById('pizza');
-const personalCount = document.getElementById('personalCount');
-const globalCount = document.getElementById('globalCount');
-const indicator = document.querySelector('.indicator');
-const target = document.querySelector('.target');
-const result = document.getElementById('result');
-const easyBtn = document.querySelector('.easy');
-const midBtn = document.querySelector('.mid');
-const hardBtn = document.querySelector('.hard');
-const extremeBtn = document.querySelector('.extreme');
-const gameContainer = document.querySelector('.game-container');
+const socket = io(); // works both locally & on Render
 
-const socket = new WebSocket("ws://localhost:8080");
+const pizza = document.getElementById("pizza");
+const globalCount = document.getElementById("globalCount");
+const personalCountEl = document.getElementById("personalCount");
+const slider = document.getElementById("slider");
+const targetZone = document.getElementById("target-zone");
+const extremeBtn = document.getElementById("extremeBtn");
 
-let barWidth = 400;
-let indicatorWidth = 20;
-let pos = barWidth / 2 - indicatorWidth / 2;
-let dir = 1;
-let speed = 5;
-let reward = 1;
-let targetWidth = 100;
-let paused = false;
+let personalCount = 0;
+let totalPizzas = 0;
+let speed = 2;
+let mode = "easy";
+let direction = 1;
+let sliderPos = 50;
+let gameActive = true;
 
-let personalPizzas = 0;
-let globalPizzas = 0;
-
-// 🧠 WebSocket Handling
-socket.onopen = () => console.log("✅ Connected to Pizza Server");
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  if (data.type === "update") {
-    globalPizzas = data.globalPizzas;
-    globalCount.textContent = `Global Pizzas: ${globalPizzas}`;
-  }
+const modeSettings = {
+  easy: { winRange: 20, speed: 2, reward: 1 },
+  mid: { winRange: 10, speed: 3, reward: 2 },
+  hard: { winRange: 5, speed: 4, reward: 3 },
+  extreme: { winRange: 3, speed: 5, reward: 5 }
 };
 
-// 🔓 Extreme Unlock Check
-function updateExtremeUnlock() {
-  const remaining = Math.max(100 - personalPizzas, 0);
-  if (personalPizzas >= 100) {
-    extremeBtn.classList.add("unlocked");
-    extremeBtn.textContent = "Extreme 💀";
+// Slider animation
+function animateSlider() {
+  if (!gameActive) return;
+  sliderPos += direction * speed;
+  if (sliderPos <= 0 || sliderPos >= 100) direction *= -1;
+  slider.style.left = `${sliderPos}%`;
+  requestAnimationFrame(animateSlider);
+}
+
+// Mode selection
+document.querySelectorAll(".mode").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (btn.id === "extremeBtn" && totalPizzas < 100) return;
+    mode = btn.dataset.mode;
+    const { winRange } = modeSettings[mode];
+    targetZone.style.width = `${winRange}%`;
+    speed = modeSettings[mode].speed;
+  });
+});
+
+animateSlider();
+
+pizza.addEventListener("click", () => {
+  const center = parseFloat(targetZone.style.left || "40") + parseFloat(targetZone.style.width) / 2;
+  const hit = Math.abs(sliderPos - center) <= modeSettings[mode].winRange / 2;
+  if (hit) {
+    const reward = modeSettings[mode].reward;
+    personalCount += reward;
+    totalPizzas += reward;
+    personalCountEl.textContent = `Your Pizzas: ${personalCount}`;
+    socket.emit("bake", reward);
+    targetZone.style.background = "#4caf50";
   } else {
-    extremeBtn.classList.remove("unlocked");
-    extremeBtn.textContent = `Extreme 🔒 (${remaining} left)`;
+    targetZone.style.background = "#f44336";
   }
-}
-
-// 🎯 Center target each mode
-function centerTarget() {
-  const left = (barWidth - targetWidth) / 2;
-  target.style.left = left + "px";
-  target.style.width = targetWidth + "px";
-}
-
-// 💨 Move function (runs forever)
-function move() {
-  if (!paused) {
-    pos += dir * speed;
-    if (pos <= 0 || pos >= barWidth - indicatorWidth) dir *= -1;
-    indicator.style.left = pos + 'px';
-  }
-  requestAnimationFrame(move); // 🔁 never stops
-}
-
-// 💬 Floating text effect
-function showFloatingText(text, color = "#fff") {
-  const float = document.createElement("div");
-  float.className = "floating-text";
-  float.textContent = text;
-  float.style.color = color;
-  gameContainer.appendChild(float);
-  float.style.top = (pizza.offsetTop - 30) + "px";
-  setTimeout(() => float.remove(), 1000);
-}
-
-// 🍕 Check click accuracy
-function check() {
-  paused = true;
-  const targetLeft = parseFloat(target.style.left);
-  const targetRight = targetLeft + targetWidth;
-  const indicatorCenter = pos + indicatorWidth / 2;
-
-  if (indicatorCenter >= targetLeft && indicatorCenter <= targetRight) {
-    result.textContent = "🔥 Perfect pizza!";
-    indicator.style.background = "#4caf50";
-    personalPizzas += reward;
-    personalCount.textContent = `Your Pizzas: ${personalPizzas}`;
-    showFloatingText(`+${reward} 🍕`, "#8ef58e");
-    socket.send(JSON.stringify({ type: "bake", amount: reward }));
-    updateExtremeUnlock();
-  } else {
-    result.textContent = indicatorCenter < targetLeft ? "🥶 Undercooked!" : "💀 Burnt!";
-    indicator.style.background = "#f44336";
-  }
-
-  // ⏳ Resume automatically after 1s
+  gameActive = false;
   setTimeout(() => {
-    indicator.style.background = "#fff";
-    result.textContent = "";
-    paused = false;
+    targetZone.style.background = "rgba(255,255,255,0.3)";
+    gameActive = true;
+    animateSlider();
   }, 1000);
-}
-
-// 🍕 Click handler
-pizza.addEventListener('click', () => {
-  if (!paused) check();
 });
 
-// 🟢 Mode Buttons
-easyBtn.addEventListener('click', () => {
-  speed = 4;
-  reward = 1;
-  targetWidth = 100;
-  centerTarget();
-  result.textContent = "🟢 Easy mode!";
+// WebSocket updates
+socket.on("update", (count) => {
+  totalPizzas = count;
+  globalCount.textContent = `Global Pizzas: ${count}`;
+  if (count >= 100) {
+    extremeBtn.textContent = "Extreme 🔥";
+    extremeBtn.classList.remove("locked");
+  } else {
+    extremeBtn.textContent = `Extreme 🔒 (${100 - count} more)`;
+  }
 });
-
-midBtn.addEventListener('click', () => {
-  speed = 6;
-  reward = 2;
-  targetWidth = 70;
-  centerTarget();
-  result.textContent = "🟠 Mid mode!";
-});
-
-hardBtn.addEventListener('click', () => {
-  speed = 9;
-  reward = 4;
-  targetWidth = 40;
-  centerTarget();
-  result.textContent = "🔴 Hard mode!";
-});
-
-extremeBtn.addEventListener('click', () => {
-  if (!extremeBtn.classList.contains("unlocked")) return;
-  speed = 13;
-  reward = 8;
-  targetWidth = 25;
-  centerTarget();
-  result.textContent = "💀 EXTREME MODE!!!";
-  showFloatingText("⚡ Extreme unlocked! ⚡", "#ff00ff");
-});
-
-// Start setup
-centerTarget();
-updateExtremeUnlock();
-move(); // 🌀 start animation loop
