@@ -68,9 +68,9 @@ h1 {
 
 button {
     position: relative;
-    width: 90%;           
-    max-width: 400px;     
-    aspect-ratio: 7 / 3;  
+    width: 90%;           /* passt sich an Bildschirmbreite an */
+    max-width: 400px;     /* maximale Breite */
+    aspect-ratio: 7 / 3;  /* feste Ratio Breite:Höhe */
     border: none;
     padding: 0;
     border-radius: 20px;
@@ -104,7 +104,7 @@ button img {
     width: 40px;
     height: 40px;
     border: 2px solid rgba(0,0,0,0.5);
-    transition: transform 0.1s ease-out;
+    transition: width 0.1s ease, height 0.1s ease;
     filter: blur(0.5px);
 }
 
@@ -113,7 +113,7 @@ button img {
     height: 8px;
     background: #000;
     box-shadow: 0 0 8px rgba(255,255,255,0.6);
-    transition: transform 0.05s ease-out;
+    transition: width 0.05s ease, height 0.05s ease;
 }
 
 /* ===== Responsiv für kleine Bildschirme ===== */
@@ -163,15 +163,19 @@ document.addEventListener('mousemove', e => {
     cursorInner.style.top = `${e.clientY}px`;
 });
 
-/* ===== Click Animation: innerer verschwindet, äußerer auf Größe des kleinen Kreises ===== */
+/* ===== Pixel-basierte Click Animation ===== */
 document.addEventListener('mousedown', () => {
-    cursorOuter.style.transform = 'translate(-50%, -50%) scale(0.2)'; // äußere auf kleine Größe
-    cursorInner.style.transform = 'translate(-50%, -50%) scale(0)';    // innerer verschwindet
+    cursorOuter.style.width = '35px';  // nur 5px kleiner
+    cursorOuter.style.height = '35px';
+    cursorInner.style.width = '0px';   // innerer Kreis verschwindet
+    cursorInner.style.height = '0px';
 });
 
 document.addEventListener('mouseup', () => {
-    cursorOuter.style.transform = 'translate(-50%, -50%) scale(1)';    // zurück Normalgröße
-    cursorInner.style.transform = 'translate(-50%, -50%) scale(1)';    // wieder sichtbar
+    cursorOuter.style.width = '40px';  // wieder normal
+    cursorOuter.style.height = '40px';
+    cursorInner.style.width = '8px';   // wieder sichtbar
+    cursorInner.style.height = '8px';
 });
 </script>
 </body>
