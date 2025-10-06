@@ -342,3 +342,53 @@ playBtn.addEventListener('click',()=>{
         startRound();
     } else bjStatus.textContent='Round already running.';
 });
+
+/* ---------- CUSTOM CURSOR ---------- */
+const outer = document.createElement('div');
+outer.id = 'cursorOuter';
+outer.className = 'cursor-circle-outer';
+document.body.appendChild(outer);
+
+const inner = document.createElement('div');
+inner.id = 'cursorInner';
+inner.className = 'cursor-circle-inner';
+document.body.appendChild(inner);
+
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let cursorPos = { x: mouse.x, y: mouse.y };
+
+document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+
+document.addEventListener('mousedown', ()=>{
+    inner.style.transform='translate(-50%,-50%) scale(0)';
+    outer.style.transform='translate(-50%,-50%) scale(0.7)';
+});
+
+document.addEventListener('mouseup', ()=>{
+    inner.style.transform='translate(-50%,-50%) scale(1)';
+    outer.style.transform='translate(-50%,-50%) scale(1)';
+});
+
+(function animCursor(){
+    cursorPos.x += (mouse.x - cursorPos.x)*0.1;
+    cursorPos.y += (mouse.y - cursorPos.y)*0.1;
+
+    inner.style.left = cursorPos.x + 'px';
+    inner.style.top = cursorPos.y + 'px';
+    outer.style.left = cursorPos.x + 'px';
+    outer.style.top = cursorPos.y + 'px';
+
+    const el = document.elementFromPoint(cursorPos.x, cursorPos.y);
+    if(el && (el.tagName==='BUTTON' || el.tagName==='TEXTAREA' || el.type==='range')){
+        inner.style.opacity = 0.1;
+        outer.style.opacity = 0.1;
+    } else {
+        inner.style.opacity = 1;
+        outer.style.opacity = 1;
+    }
+
+    requestAnimationFrame(animCursor);
+})();

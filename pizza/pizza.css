@@ -20,6 +20,7 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   user-select:none;
+  cursor: none; /* Standard-Cursor verstecken */
 }
 
 .wrapper{
@@ -52,9 +53,9 @@ h1{ margin:0 0 8px 0; font-size:28px; text-align:center; }
   display: flex;
   justify-content: center;
   align-items: center;
-  gap:10px; /* Abstand zwischen Zahl und +N */
-  margin:0 0 20px 0; /* Platz über Pizza */
-  height:40px; /* genug Höhe, schneidet nicht die Pizza */
+  gap:10px;
+  margin:0 0 20px 0;
+  height:40px;
 }
 
 #personalCount{
@@ -268,6 +269,32 @@ h1{ margin:0 0 8px 0; font-size:28px; text-align:center; }
   color:#fff;
   cursor:pointer;
   font-size:16px;
+}
+
+/* ----------------- Custom Cursor ----------------- */
+.cursor-circle-outer {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  background: rgba(128, 128, 128, 0.25);
+  border: 2px solid rgba(128, 128, 128, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.1s ease, opacity 0.3s ease;
+}
+
+.cursor-circle-inner {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: black;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1001;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.1s ease, opacity 0.3s ease;
 }
 
 @media (max-width:520px){
