@@ -38,17 +38,11 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.35);
   width:100%;
   max-width:500px;
-}
-
-.game-container{
+  box-sizing:border-box;
   text-align:center;
 }
 
-h1{
-  margin:0 0 8px 0; 
-  font-size:28px;
-  text-align:center; /* Überschrift mittig */
-}
+h1, .blackjack-container h2{ margin:0 0 12px 0; }
 
 .counter-wrapper{
   display:flex;
@@ -58,7 +52,7 @@ h1{
   margin:8px 0;
 }
 #personalCount{
-  font-size:20px;
+  font-size:22px;
   font-weight:700;
   background: rgba(255,255,255,0.1);
   padding:8px 16px;
@@ -66,17 +60,14 @@ h1{
   display:inline-block;
   text-align:center;
 }
-
 #plusText{
   font-size:18px;
   font-weight:700;
   color:#ffd166;
   min-width:50px;
-  display:inline-block;
   text-align:left;
 }
 
-/* Pizza */
 #pizza{
   width:200px;
   height:200px;
@@ -92,7 +83,8 @@ h1{
 
 /* bar */
 .bar{
-  width:400px;
+  width:90%;
+  max-width:400px;
   height:15px;
   margin:14px auto;
   background: rgba(0,0,0,0.3);
@@ -119,13 +111,13 @@ h1{
   transition: background .2s ease, left 0.03s linear;
 }
 
-/* result text space */
+/* result space */
 #result{
   height:22px;
   margin-top:10px;
   font-size:16px;
   text-align:center;
-  min-height:24px; /* feste Höhe damit Buttons nicht verschieben */
+  min-height:24px;
 }
 
 /* modes */
@@ -165,7 +157,7 @@ h1{
   box-shadow:0 6px 18px rgba(216,27,96,0.18);
 }
 
-/* Open Blackjack button */
+/* Blackjack */
 .open-blackjack{
   margin-top:12px;
   display:block;
@@ -178,8 +170,6 @@ h1{
   cursor:pointer;
   border:none;
 }
-
-/* blackjack container */
 .blackjack-container{
   max-height:0;
   opacity:0;
@@ -189,13 +179,12 @@ h1{
   background: rgba(0,0,0,0.32);
   text-align:center;
 }
-
 .blackjack-container.open{
   max-height:520px;
   opacity:1;
 }
 
-/* blackjack layout */
+/* Cards and actions */
 .bj-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
 .cards{
   display:flex;
@@ -235,19 +224,21 @@ h1{
 
 .status{ text-align:center; margin-top:8px; font-size:15px; min-height:20px; }
 
-/* floating text beside counter */
-.plusTextAnimated{
-  display:inline-block;
-  margin-left:6px;
-  font-weight:bold;
-  color:#ffd700;
-  opacity:0;
-  animation: floatRight 1s ease-out forwards;
+/* floating text */
+.floating-text{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  font-weight:700;
+  font-size:18px;
+  pointer-events:none;
+  animation: floatUp 1s ease-out forwards;
+  text-shadow:0 4px 12px rgba(0,0,0,0.5);
 }
-
-@keyframes floatRight{
-  0%{ opacity:1; transform: translateX(0); }
-  100%{ opacity:1; transform: translateX(30px); }
+@keyframes floatUp{
+  from{ opacity:1; transform:translate(-50%,0) }
+  to{ opacity:0; transform:translate(-50%,-60px) }
 }
 
 /* betting controls */
@@ -277,7 +268,7 @@ h1{
 
 /* Responsive tweaks */
 @media (max-width:520px){
-  .bar{ width:320px; }
+  .bar{ width:90%; max-width:320px; }
   .game-container, .blackjack-container{ padding:16px; }
   .card{ min-width:48px; height:64px; }
   .wrapper{ gap:12px; }

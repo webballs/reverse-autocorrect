@@ -51,11 +51,11 @@ let inRound = false;
 let currentBet = 1;
 
 /* ---------- initialize UI ---------- */
-function updateCounters(){
+function updateCounters(txt='+0'){
   personalCountEl.textContent = `Your Pizzas: ${personalPizzas}`;
+  plusTextEl.textContent = txt ? txt+' 🍕' : '';
   updateExtremeUnlock();
   updateBlackjackUnlock();
-  plusTextEl.textContent = '';
 }
 updateCounters();
 
@@ -84,13 +84,13 @@ function move(){
 move();
 
 /* ---------- floating text ---------- */
-function showFloatingText(txt, color='#fff'){
-  plusTextEl.textContent = txt;
-  plusTextEl.style.color = color;
-  plusTextEl.style.opacity = 1;
+function showFloatingText(txt,color='#ffd166'){
+  plusTextEl.textContent = txt + ' 🍕';
+  plusTextEl.style.opacity = '1';
+  plusTextEl.style.transition = 'none';
   setTimeout(()=>{
     plusTextEl.style.transition = 'opacity 1s ease';
-    plusTextEl.style.opacity = 0;
+    plusTextEl.style.opacity = '0';
   },50);
 }
 
@@ -114,7 +114,7 @@ function checkBar(){
   }
 
   updateCounters();
-  showFloatingText(`+${gain} 🍕`,'#ffd166');
+  if(gain>0) showFloatingText(`+${gain}`);
 
   setTimeout(()=>{
     indicatorEl.style.background = '#fff';
@@ -292,7 +292,7 @@ function startRound(){
       personalPizzas+=payout;
       if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
       bjStatus.textContent='Blackjack! You win!';
-      showFloatingText(`+${payout} 🍕`);
+      showFloatingText(`+${payout}`);
     } else if(!pBlack && dBlack){
       bjStatus.textContent='Dealer has Blackjack. You lose.';
     } else {
@@ -338,7 +338,7 @@ standBtn.addEventListener('click', ()=>{
     personalPizzas+=payout;
     if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
     bjStatus.textContent='Dealer busts! You win!';
-    showFloatingText(`+${payout} 🍕`);
+    showFloatingText(`+${payout}`);
   } else if(dv===pv){ // Push
     personalPizzas+=currentBet;
     bjStatus.textContent='Push. Bet returned.';
@@ -347,7 +347,7 @@ standBtn.addEventListener('click', ()=>{
     personalPizzas+=payout;
     if(personalPizzas>maxPizzasAchieved) maxPizzasAchieved=personalPizzas;
     bjStatus.textContent='You win!';
-    showFloatingText(`+${payout} 🍕`);
+    showFloatingText(`+${payout}`);
   } else {
     bjStatus.textContent='You lose.';
   }
