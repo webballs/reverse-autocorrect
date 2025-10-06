@@ -1,80 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizza Clicker</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="pizza.css">
 </head>
 <body>
-  <div class="wrapper">
-    <div class="game-container">
-      <h1>🍕 Pizza Clicker</h1>
-      <p id="personalCount" class="count">Your Pizzas: 0</p>
-      <p id="globalCount" class="count">Global Pizzas: 0</p>
+  <div class="game-container">
+    <h1>🍕 Pizza Clicker</h1>
+    <p id="personalCount">Your Pizzas: 0</p>
+    <p id="globalCount">Global Pizzas: 0</p>
 
-      <img id="pizza" src="pizza.png" alt="Pizza">
+    <img id="pizza" src="pizza.png" alt="Pizza">
 
-      <div class="bar">
-        <div class="target"></div>
-        <div class="indicator"></div>
-      </div>
-
-      <div id="result"></div>
-
-      <div class="modes">
-        <button class="easy">Easy</button>
-        <button class="mid">Mid</button>
-        <button class="hard">Hard</button>
-      </div>
-
-      <button class="extreme">Extreme 🔒 (100 left)</button>
-
-      <button class="open-blackjack">🎰 Open Blackjack</button>
+    <div class="bar">
+      <div class="target"></div>
+      <div class="indicator"></div>
     </div>
 
-    <div class="blackjack-container" id="blackjackBox" aria-hidden="true">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <div style="flex:1">
-          <h2 style="margin:0 0 6px 0">🍀 Blackjack</h2>
-          <div style="font-size:14px;color:#fffde6">Bet at least 1 pizza. When you click Play the bet is immediately deducted from your personal counter and applied to global server count.</div>
-        </div>
+    <p id="result"></p>
 
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="bet-controls">
-            <button class="small-btn" id="betMinus">−</button>
-            <input id="betInput" type="number" min="1" value="1" />
-            <button class="small-btn" id="betPlus">+</button>
-          </div>
-          <button class="small-btn" id="playBtn">Play</button>
-        </div>
-      </div>
-
-      <div style="margin-top:14px">
-        <div class="bj-row">
-          <div style="flex:1;text-align:center">
-            <div style="font-size:14px;color:#fffde6">Dealer</div>
-            <div id="dealerCards" class="cards" style="margin-top:8px"></div>
-            <div id="dealerValue" style="margin-top:8px;color:#fffde6"></div>
-          </div>
-
-          <div style="flex:1;text-align:center">
-            <div style="font-size:14px;color:#fffde6">You</div>
-            <div id="playerCards" class="cards" style="margin-top:8px"></div>
-            <div id="playerValue" style="margin-top:8px;color:#fffde6"></div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="action-btn" id="hitBtn" disabled>Hit</button>
-          <button class="action-btn" id="standBtn" disabled>Stand</button>
-          <button class="action-btn" id="quitRound" disabled>Quit</button>
-        </div>
-
-        <div class="status" id="bjStatus"></div>
-      </div>
+    <div class="modes">
+      <button class="easy">Easy</button>
+      <button class="mid">Mid</button>
+      <button class="hard">Hard</button>
     </div>
+    <button class="extreme">Extreme 🔒 (100 left)</button>
   </div>
 
   <script src="pizza.js"></script>
