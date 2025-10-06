@@ -38,36 +38,49 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,0.35);
   width:100%;
   max-width:500px;
-  box-sizing:border-box;
+}
+
+.game-container{
   text-align:center;
 }
 
-h1, .blackjack-container h2{ margin:0 0 12px 0; }
-
-.counter-wrapper{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  margin:8px 0;
+h1{ 
+  margin:0 0 8px 0; 
+  font-size:28px; 
+  text-align:center; /* zentriert die Überschrift */
 }
+
+/* Counter & Plus-Text */
+.counter-wrapper{
+  position: relative;      /* absolute Kinder beziehen sich hierauf */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;           /* feste Breite */
+  margin: 8px 0;
+}
+
 #personalCount{
-  font-size:22px;
+  font-size: 20px;
   font-weight:700;
   background: rgba(255,255,255,0.1);
-  padding:8px 16px;
+  padding: 8px 16px;
   border-radius:12px;
-  display:inline-block;
-  text-align:center;
-}
-#plusText{
-  font-size:18px;
-  font-weight:700;
-  color:#ffd166;
-  min-width:50px;
-  text-align:left;
+  display: inline-block;
 }
 
+#plusText{
+  position: absolute;
+  top: 100%;             /* unter dem Counter */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  font-weight:700;
+  color: #ffd166;
+  pointer-events:none;
+}
+
+/* Pizza */
 #pizza{
   width:200px;
   height:200px;
@@ -83,7 +96,7 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
 
 /* bar */
 .bar{
-  width:90%;
+  width:100%;
   max-width:400px;
   height:15px;
   margin:14px auto;
@@ -111,13 +124,13 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
   transition: background .2s ease, left 0.03s linear;
 }
 
-/* result space */
+/* result text space */
 #result{
   height:22px;
   margin-top:10px;
   font-size:16px;
   text-align:center;
-  min-height:24px;
+  min-height:24px; /* feste Höhe damit Buttons nicht verschieben */
 }
 
 /* modes */
@@ -157,7 +170,7 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
   box-shadow:0 6px 18px rgba(216,27,96,0.18);
 }
 
-/* Blackjack */
+/* Open Blackjack button */
 .open-blackjack{
   margin-top:12px;
   display:block;
@@ -170,6 +183,8 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
   cursor:pointer;
   border:none;
 }
+
+/* blackjack container */
 .blackjack-container{
   max-height:0;
   opacity:0;
@@ -179,12 +194,13 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
   background: rgba(0,0,0,0.32);
   text-align:center;
 }
+
 .blackjack-container.open{
   max-height:520px;
   opacity:1;
 }
 
-/* Cards and actions */
+/* blackjack layout */
 .bj-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
 .cards{
   display:flex;
@@ -268,7 +284,7 @@ h1, .blackjack-container h2{ margin:0 0 12px 0; }
 
 /* Responsive tweaks */
 @media (max-width:520px){
-  .bar{ width:90%; max-width:320px; }
+  .bar{ width:90%; }
   .game-container, .blackjack-container{ padding:16px; }
   .card{ min-width:48px; height:64px; }
   .wrapper{ gap:12px; }

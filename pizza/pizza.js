@@ -39,7 +39,7 @@ let reward = 1;
 let targetWidth = 100;
 
 let personalPizzas = 5;
-let maxPizzasAchieved = personalPizzas; // Höchstwert für Extreme
+let maxPizzasAchieved = personalPizzas; 
 let extremeUnlocked = false;
 let blackjackUnlocked = false;
 
@@ -51,11 +51,11 @@ let inRound = false;
 let currentBet = 1;
 
 /* ---------- initialize UI ---------- */
-function updateCounters(txt='+0'){
+function updateCounters(){
   personalCountEl.textContent = `Your Pizzas: ${personalPizzas}`;
-  plusTextEl.textContent = txt ? txt+' 🍕' : '';
   updateExtremeUnlock();
   updateBlackjackUnlock();
+  plusTextEl.textContent = '';
 }
 updateCounters();
 
@@ -84,13 +84,13 @@ function move(){
 move();
 
 /* ---------- floating text ---------- */
-function showFloatingText(txt,color='#ffd166'){
-  plusTextEl.textContent = txt + ' 🍕';
-  plusTextEl.style.opacity = '1';
-  plusTextEl.style.transition = 'none';
+function showFloatingText(txt, color='#fff'){
+  plusTextEl.textContent = txt;
+  plusTextEl.style.color = color;
+  plusTextEl.style.opacity = 1;
   setTimeout(()=>{
     plusTextEl.style.transition = 'opacity 1s ease';
-    plusTextEl.style.opacity = '0';
+    plusTextEl.style.opacity = 0;
   },50);
 }
 
@@ -114,7 +114,7 @@ function checkBar(){
   }
 
   updateCounters();
-  if(gain>0) showFloatingText(`+${gain}`);
+  showFloatingText(`+${gain} 🍕`,'#ffd166');
 
   setTimeout(()=>{
     indicatorEl.style.background = '#fff';
@@ -178,6 +178,9 @@ function updateBlackjackUnlock(){
     openBJBtn.textContent=`🎰 Blackjack 🔒 (${remaining} left)`;
   }
 }
+
+/* ---------- restlicher Blackjack + Bet logic bleibt identisch ---------- */
+
 
 /* ---------- OPEN/CLOSE blackjack ---------- */
 openBJBtn.addEventListener('click', ()=>{
