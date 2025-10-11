@@ -37,7 +37,7 @@ let speed = 5;
 let reward = 1;
 let targetWidth = 100;
 
-let personalPizzas = 5;
+let personalPizzas = 0;
 let maxPizzasAchieved = personalPizzas;
 let extremeUnlocked = false;
 let blackjackUnlocked = false;
@@ -90,7 +90,7 @@ function showFloatingText(txt,color='#ffd166'){
     floatEl.style.position = 'absolute';
     floatEl.style.color = color;
     floatEl.style.fontWeight = '700';
-    floatEl.style.fontSize = '18px';
+    floatEl.style.fontSize = '40px';
     floatEl.style.pointerEvents = 'none';
     floatEl.style.textShadow = '0 4px 12px rgba(0,0,0,0.5)';
     floatEl.style.zIndex = 3;
@@ -180,7 +180,7 @@ function updateExtremeUnlock(){
 }
 extremeBtn.addEventListener('click',()=>{
     if(!extremeUnlocked) return;
-    speed=13; reward=100; targetWidth=25; centerTarget();
+    speed=13; reward=1000; targetWidth=15; centerTarget();
     resultEl.textContent='💀 EXTREME MODE!!!';
     showFloatingText('⚡ Extreme unlocked! ⚡','#ff00ff');
     setTimeout(()=> resultEl.textContent='',1000);
@@ -188,8 +188,8 @@ extremeBtn.addEventListener('click',()=>{
 
 /* ---------- Blackjack unlock ---------- */
 function updateBlackjackUnlock(){
-    const remaining = Math.max(10-maxPizzasAchieved,0);
-    if(maxPizzasAchieved>=10){
+    const remaining = Math.max(300-maxPizzasAchieved,0);
+    if(maxPizzasAchieved>=300){
         blackjackUnlocked=true;
         openBJBtn.disabled=false;
         openBJBtn.textContent='🎰 Open Blackjack';

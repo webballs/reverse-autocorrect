@@ -179,19 +179,26 @@ h1{ margin:0 0 8px 0; font-size:28px; text-align:center; }
 }
 
 /* ----------------- Blackjack ----------------- */
-.open-blackjack{
+.open-blackjack {
   margin-top:12px;
   display:block;
   width:100%;
   text-align:center;
-  background:#222;
+  background:transparent;
+  color:white;
+  border:3px solid rgb(75, 75, 75);
   padding:10px;
   border-radius:10px;
   font-size:16px;
   cursor:pointer;
-  border:none;
+  font-weight:600;
+  transition: 0.2s ease, color 0.2s ease;
 }
 
+.open-blackjack:hover {
+  background:rgb(75, 75, 75);
+  color:rgb(255, 255, 255);
+}
 .blackjack-container{
   max-height:0;
   opacity:0;
